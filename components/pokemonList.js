@@ -7,7 +7,7 @@ const PokemonList = ({ data }) => {
         <div className={styles.grid}>
             {
                 data.map((pokemon, i) => (
-                    <PokemonCard key={i} data={pokemon} />
+                    <PokemonCard key={i} pokemon={pokemon[0]} />
                 ))
             }
         </div>

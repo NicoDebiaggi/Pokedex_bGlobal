@@ -1,19 +1,10 @@
 import Image from 'next/image'
-import Link from 'next/link'
-import { useEffect, useState } from 'react'
 import { usePokeContext } from '../contexts/pokeContext'
 import styles from '../styles/Home.module.css'
 
 
-const PokemonCard = ({ data }) => {
+const PokemonCard = ({ pokemon }) => {
     const { pokeTask } = usePokeContext()
-    const [pokemon, setPokemon] = useState()
-    
-    useEffect(() => {
-        data.id
-        ? setPokemon(data)
-        : pokeTask.getPokemon(data.url).then(data => setPokemon(data))
-    }, [data.id, data.url])
 
     return ( 
         pokemon 

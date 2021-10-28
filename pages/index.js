@@ -6,36 +6,18 @@ import Searcher from '../components/searcher'
 import { usePokeContext } from '../contexts/pokeContext'
 import styles from '../styles/Home.module.css'
 
-export default function Home({ data }) {
+export default function Home() {
   const { pokeTask } = usePokeContext()
-  const [pokemons, setPokemons] = useState([...data.results])
   const [toSearch, setToSearch] = useState('')
 
-
   useEffect(() => {
-    if((pokemons.length === 1 && toSearch == '')) {
-      setPokemons([...data.results]) 
-    }
-    if (toSearch !== '') {
-      pokeTask.getPokemons(toSearch)
-      .then(search => {
-              search ? setPokemons([search]) : null 
-            })
-    }
-  }, [pokemons, toSearch])
-
-
-  useEffect(() => { 
-    const nextPage = () => {pokeTask.getPokemons().then(data => {
-      data ? setPokemons([...pokemons, ...data]) : null
-    })}
+    toSearch ? pokeTask.getPokemons(toSearch) : (pokeTask.pokemons.length > 1) ? null : pokeTask.setBaseData()
 
     window.onscroll = (e) => {
       const end = ((e.target.documentElement.scrollHeight - e.target.documentElement.scrollTop) === e.target.documentElement.clientHeight)
-      end ? nextPage() : null
+      end && pokeTask.getPokemons(toSearch)
     }
-  }, [pokemons])
-
+  }, [toSearch, pokeTask.pokemons])
 
   return (
     <div className={styles.container} >
@@ -46,16 +28,9 @@ export default function Home({ data }) {
 
       <Searcher setToSearch={setToSearch}/>
 
-      <PokemonList data={pokemons} />
+      <PokemonList data={pokeTask.pokemons} />
 
       {pokeTask.detail ? <PokemonDetail /> : null}
     </div>
   )
-}
-
-Home.getInitialProps = async () => {
-  let res = await fetch("https://pokeapi.co/api/v2/pokemon")
-  let data = await res.json()
-
-  return { data }
 }
